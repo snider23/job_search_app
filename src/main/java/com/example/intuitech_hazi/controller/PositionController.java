@@ -33,7 +33,8 @@ public class PositionController {
     public ResponseEntity<String> createNewJob(@RequestBody @Valid Position newPosition,
                                                @RequestHeader("apiKey") UUID apiKey){
         if (!clientService.isApiKeyExists(apiKey)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Hibás API kulcs");
         }else {
 
             positionService.createNewPosition(newPosition);
