@@ -14,14 +14,24 @@ import java.util.UUID;
 @Transactional
 public class ClientService {
 
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
     @Autowired
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
+    public boolean isEmailInUse(String email) {
+        return clientRepository.existsByEmail(email);
+    }
+
+    public Client registerClient(Client newClient) {
+        newClient.setApiKey(UUID.randomUUID());
+        return clientRepository.save(newClient);
+    }
+
+        //TODO isApiKeyExists
     public boolean isApiKeyExists(UUID apiKey){
-        return !clientRepository.findByApiKey(apiKey).isEmpty();
+        return clientRepository.findByApiKey(apiKey).isPresent();
     }
 }

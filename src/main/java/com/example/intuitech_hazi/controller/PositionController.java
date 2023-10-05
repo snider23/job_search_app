@@ -19,6 +19,8 @@ import java.util.UUID;
 @Validated
 public class PositionController {
 
+
+
    private PositionService positionService;
    private ClientService clientService;
 
@@ -26,7 +28,7 @@ public class PositionController {
         this.positionService = positionService;
     }
 
-    @PostMapping    //TODO nem hozza letre postmannel megnezni
+    @PostMapping
     public ResponseEntity<String> createNewJob(@RequestBody @Valid Position newPosition,
                                                          @RequestParam UUID apiKey){
         if (!clientService.isApiKeyExists(apiKey)){

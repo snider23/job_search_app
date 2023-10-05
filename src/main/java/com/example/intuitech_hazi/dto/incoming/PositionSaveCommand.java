@@ -15,6 +15,6 @@ public class PositionSaveCommand {
     @Size(max = 50)
     private String location;
 
-    //TODO ide szerintem nem kell konstruktor? kesobb megnezni
+
 
 }
