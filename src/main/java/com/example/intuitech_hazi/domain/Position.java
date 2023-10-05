@@ -2,7 +2,6 @@ package com.example.intuitech_hazi.domain;
 
 import com.example.intuitech_hazi.dto.incoming.PositionSaveCommand;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,13 +17,33 @@ public class Position {
     private Long id;
     @Column(nullable = false)
     @Size(max = 50)
-    private String name;
+    private String title;
     @Column(nullable = false)
     @Size(max = 50)
     private String location;
 
     public Position(PositionSaveCommand positionSaveCommand) {
-    this.name= positionSaveCommand.getTitle();
-    this.location= positionSaveCommand.getLocation();
+        this.title = (positionSaveCommand.getTitle() != null) ? positionSaveCommand.getTitle() : "";
+        this.location = (positionSaveCommand.getLocation() != null) ? positionSaveCommand.getLocation() : "";
+    }
+
+    public Position() {
+
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

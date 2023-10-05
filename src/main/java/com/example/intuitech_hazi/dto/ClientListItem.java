@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public class ClientListItem {
 
-
+    //TODO KELL EGYALTALAN ez az osztaly?
 
     @Size(min=1, max = 100)
     private String name;

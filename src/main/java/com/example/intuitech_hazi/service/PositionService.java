@@ -16,7 +16,7 @@ public class PositionService {
     }
 
     public String createNewPosition(Position newPosition){
-        if (newPosition.getName().length()>50){
+        if (newPosition.getTitle().length()>50){
             throw new IllegalArgumentException("The title of position is too long");
         } else if (newPosition.getLocation().length() >50) {
             throw new IllegalArgumentException("The location of position is too long");
