@@ -2,6 +2,7 @@ package com.example.intuitech_hazi.service;
 
 import com.example.intuitech_hazi.domain.Client;
 import com.example.intuitech_hazi.dto.ClientListItem;
+import com.example.intuitech_hazi.dto.incoming.ClientSaveCommand;
 import com.example.intuitech_hazi.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,15 @@ public class ClientService {
         return clientRepository.existsByEmail(email);
     }
 
-    public Client registerClient(Client newClient) {
-        newClient.setApiKey(UUID.randomUUID());
-        return clientRepository.save(newClient);
+    public Client registerClient(ClientSaveCommand newClient) {
+        String apiKey= UUID.randomUUID().toString();
+        Client client= new Client(newClient);
+        client.setApiKey(apiKey);
+        return clientRepository.save(client);
     }
 
         //TODO isApiKeyExists
-    public boolean isApiKeyExists(UUID apiKey){
+    public boolean isApiKeyExists(String apiKey){
         return clientRepository.findByApiKey(apiKey).isPresent();
     }
 }

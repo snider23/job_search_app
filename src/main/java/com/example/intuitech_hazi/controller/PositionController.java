@@ -32,8 +32,8 @@ public class PositionController {
     }
 
     @PostMapping    //TODO nem hozza letre postmannel megnezni, headerken add at az apikeyt
-    public ResponseEntity<String> createNewJob(@RequestBody @Valid Position newPosition,
-                                               @RequestHeader("apiKey") UUID apiKey){
+    public ResponseEntity<String> createNewJob(@RequestBody Position newPosition,
+                                               @RequestHeader("apiKey") String apiKey){
         if (!clientService.isApiKeyExists(apiKey)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Hibás API kulcs");

@@ -12,4 +12,6 @@ public interface PositionRepository extends JpaRepository<Position,Long> {
 
     @Query("SELECT p FROM Position p WHERE p.id = :id")
     Position findPositionById(@Param("id") Long id);
+
+    //todo query
 }

@@ -1,4 +1,4 @@
-package com.example.intuitech_hazi.config;
+package com.example.intuitech_hazi.service;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

@@ -1,5 +1,6 @@
 package com.example.intuitech_hazi.domain;
 
+import com.example.intuitech_hazi.dto.incoming.ClientSaveCommand;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -24,21 +25,21 @@ public class Client {
     private String name;
 
     @Column(nullable = false, unique = true)
-    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
-            flags = Pattern.Flag.CASE_INSENSITIVE)
-    @NotEmpty(message = "Email cannot be empty")
+//    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
+//            flags = Pattern.Flag.CASE_INSENSITIVE)
+//    @NotEmpty(message = "Email cannot be empty")
     private String email;
 
     @Column(nullable = false)
-    @UuidGenerator(style = UuidGenerator.Style.RANDOM)
-    private UUID apiKey;
+//    @UuidGenerator(style = UuidGenerator.Style.RANDOM)
+    private String apiKey;
 
     public Client() {
     }
 
-    public Client(String name, String email) {
-        this.name = name;
-        this.email = email;
+    public Client(ClientSaveCommand clientSaveCommand) {
+        this.name = clientSaveCommand.getName();
+        this.email = clientSaveCommand.getEmail();
 
     }
 }

@@ -14,5 +14,5 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
 
     boolean existsByEmail(String email);
 
-   Optional<Client> findByApiKey(UUID id);
+   Optional<Client> findByApiKey(String id);
 }
