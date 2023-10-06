@@ -1,9 +1,12 @@
 package com.example.intuitech_hazi.service;
 
 import com.example.intuitech_hazi.domain.Position;
+import com.example.intuitech_hazi.dto.outgoing.PositionListItem;
 import com.example.intuitech_hazi.repository.PositionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -24,4 +27,10 @@ public class PositionService {
         Position createdPosition = positionRepository.save(newPosition);
         return createdPosition.toString();
     }
+
+    public List<Position> getPositions() {
+        return positionRepository.findAll();
+    }
+
+    public Position getPositionById(Long id){return positionRepository.findPositionById(id);}
 }
