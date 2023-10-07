@@ -39,5 +39,5 @@ public class ClientController {
         //return ResponseEntity.status(HttpStatus.CREATED).body(result.getApiKey().toString());
     }
 
-    //TODO headerben kellene visszaküldeni
+    //TODO headerben kellene visszaküldeni --kész
 }
