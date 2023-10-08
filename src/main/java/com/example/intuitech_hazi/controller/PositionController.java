@@ -60,22 +60,25 @@ public class PositionController {
 
 
     @GetMapping("/jobs")
-    public Mono<List<PositionListItem>> getJobs(@RequestBody Position keyword, @RequestHeader("apiKey") String apiKey) {
+    public Mono<Object> getJobs(@RequestBody Position position, @RequestHeader("apiKey") String apiKey) {
         if (!clientService.isApiKeyExists(apiKey)){
             return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid API key"));
         }
+        List<PositionListItem> allPositionFromBothDB = new ArrayList<>();
+
+
         return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/api/1.0/search")
-                        .queryParam("keywords",keyword.getTitle())
-                        .queryParam("locationName",keyword.getLocation())
-                        .queryParam("resultsToTake","20")
+                        .queryParam("keywords",position.getTitle())
+                        .queryParam("locationName",position.getLocation())
+                        .queryParam("resultsToTake","5")
                         .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(headers -> headers.setBasicAuth(externalApiKey, ""))
                 .retrieve()
                 .bodyToMono(String.class)
-                .map(json -> {
+                .flatMap(json -> {
                     ObjectMapper mapper = new ObjectMapper();
                     try {
                         JsonNode rootNode = mapper.readTree(json);
@@ -88,18 +91,18 @@ public class PositionController {
                             job.setJobUrl(resultNode.get("jobUrl").asText());
                             jobs.add(job);
                         }
-                        return jobs;
+                        allPositionFromBothDB.addAll(jobs);
+                        allPositionFromBothDB.addAll(getComplexPositions(position, apiKey));
+                        return Mono.just(allPositionFromBothDB);
                     } catch (JsonProcessingException e) {
-                        // handle exception
                         e.printStackTrace();
-                        return Collections.emptyList();
+                        return Mono.just(Collections.emptyList());
                     }
+
                 });
-//
     }
 
     //TODO Jackson convertalas utan nezni
-
 
 
     @PostMapping    //TODO nem hozza letre postmannel megnezni, headerken add at az apikeyt
@@ -133,8 +136,8 @@ public class PositionController {
     }
 
     @GetMapping("/getjobs")
-    public List<PositionListItem> getComplexPositions(@RequestHeader("apiKey") String apiKey, @RequestBody Position position){
-        if(!clientService.isApiKeyExists(apiKey)){
+    public List<PositionListItem> getComplexPositions(@RequestBody Position position, @RequestHeader("apiKey") String apiKey) {
+        if (!clientService.isApiKeyExists(apiKey)) {
             throw new IllegalArgumentException("api key not found");
         }
 
