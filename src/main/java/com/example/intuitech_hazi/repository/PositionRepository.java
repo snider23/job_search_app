@@ -14,8 +14,8 @@ public interface PositionRepository extends JpaRepository<Position,Long> {
     @Query("SELECT p FROM Position p WHERE p.id = :id")
     Position findPositionById(@Param("id") Long id);
 
-    //todo query
+    //todo KÉRDÉS: érdmes modositani, mert most ha egy szóban van egy betű akkor azzal a betűvel az összes JobTitle-t megjeleniti
 
-    @Query(value = "SELECT * FROM Positions p WHERE p.name LIKE %:title% OR p.location LIKE %:location%", nativeQuery = true)
-    List<Position> findPositionsBy(@Param("title") String jobTitle, @Param("location") String jobLocation);
+    @Query("SELECT p FROM Position p WHERE p.title LIKE %:jobTitle% OR p.location LIKE %:jobLocation%")
+    List<Position> findPositionsBy(@Param("jobTitle") String jobTitle, @Param("jobLocation") String jobLocation);
 }

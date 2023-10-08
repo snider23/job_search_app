@@ -1,39 +1,48 @@
 package com.example.intuitech_hazi.controller;
 
 import com.example.intuitech_hazi.domain.Position;
+import com.example.intuitech_hazi.dto.outgoing.PositionListItem;
 import com.example.intuitech_hazi.service.ClientService;
 import com.example.intuitech_hazi.service.PositionService;
-import com.example.intuitech_hazi.service.ReedJob;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Base64;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/positions")
 @Validated
 public class PositionController {
 
-    private final String URL= "http://localhost:8080/positions/";
+    private final String URL = "http://localhost:8080/positions/";
 
-   private PositionService positionService;
-   private ClientService clientService;
+    private PositionService positionService;
+    private ClientService clientService;
 
     private WebClient webClient;
+
+    @Value("${reed.api.key}")
+    private String externalApiKey;
+
+    @Value("${reed.url}")
+    private String websiteUrl;
 
 //    public PositionController(WebClient.Builder webClientBuilder) {
 //        this.webClient = webClientBuilder.baseUrl("https://www.reed.co.uk").build();
@@ -45,65 +54,91 @@ public class PositionController {
         this.clientService = clientService;
         this.webClient = webClientBuilder.baseUrl("https://www.reed.co.uk")
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
-                        .responseTimeout(Duration.ofMinutes(2)))) // Set response timeout to 10 minutes
+                        .responseTimeout(Duration.ofMinutes(2))))
                 .build();
     }
 
-    String username = "877fa464-345d-42ea-87bf-4975f7896c03";
-    String password = "";  // Leave the password empty
-    Charset charset = StandardCharsets.UTF_8;
 
-    String encodedAuth = HttpHeaders.encodeBasicAuth(username, password, charset);
-
-    @GetMapping("/jobs")        //TODO MEG KELL CSINALNI EZT AZ APIT: valahogy a username helyerekell csak az api de nem sikerul belerakni
-    public Mono<String> getJobs(){
+    @GetMapping("/jobs")
+    public Mono<List<PositionListItem>> getJobs(@RequestBody Position keyword, @RequestHeader("apiKey") String apiKey) {
+        if (!clientService.isApiKeyExists(apiKey)){
+            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid API key"));
+        }
         return this.webClient.get()
-//                .uri(uriBuilder -> uriBuilder
-//                        .path("/api/1.0/search")
-//                        .queryParam("keywords","developer")
-//                        .queryParam("locationName","london")
-//                        .queryParam("resultsToTake","20")
-//                        .build())
-//                .header(HttpHeaders.AUTHORIZATION,"877fa464-345d-42ea-87bf-4975f7896c03")
-//                .retrieve()
-//                .bodyToMono(String.class);
-                .uri("/api/1.0/search?keywords=developer&locationName=london&resultsToTake=20")
-               .header(HttpHeaders.AUTHORIZATION,"Basic"+encodedAuth)
-                //.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString("apiKey:".getBytes()))
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/1.0/search")
+                        .queryParam("keywords",keyword.getTitle())
+                        .queryParam("locationName",keyword.getLocation())
+                        .queryParam("resultsToTake","20")
+                        .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(headers -> headers.setBasicAuth(externalApiKey, ""))
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(String.class)
+                .map(json -> {
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        JsonNode rootNode = mapper.readTree(json);
+                        JsonNode resultsNode = rootNode.get("results");
+                        List<PositionListItem> jobs = new ArrayList<>();
+                        for (JsonNode resultNode : resultsNode) {
+                            PositionListItem job = new PositionListItem();
+                            job.setJobTitle(resultNode.get("jobTitle").asText());
+                            job.setLocationName(resultNode.get("locationName").asText());
+                            job.setJobUrl(resultNode.get("jobUrl").asText());
+                            jobs.add(job);
+                        }
+                        return jobs;
+                    } catch (JsonProcessingException e) {
+                        // handle exception
+                        e.printStackTrace();
+                        return Collections.emptyList();
+                    }
+                });
+//
     }
+
+    //TODO Jackson convertalas utan nezni
 
 
 
     @PostMapping    //TODO nem hozza letre postmannel megnezni, headerken add at az apikeyt
     public ResponseEntity<String> createNewJob(@RequestBody Position newPosition,
-                                               @RequestHeader("apiKey") String apiKey){
-        if (!clientService.isApiKeyExists(apiKey)){
+                                               @RequestHeader("apiKey") String apiKey) {
+        if (!clientService.isApiKeyExists(apiKey)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Hibás API kulcs");
-        }else {
+        } else {
 
             positionService.createNewPosition(newPosition);
 //            newPosition.setTitle(newPosition.getTitle());
 //            newPosition.setLocation(newPosition.getLocation());
-            Long positionId = newPosition.getId();
-            String positionUrl = URL + positionId;
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(positionUrl);
+//            Long positionId = newPosition.getId();
+//            String positionUrl = URL + positionId;
+//            positionService.getPositionById(positionId).setJobUrl(positionUrl);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newPosition.getJobUrl());
         }
     }
 
     @GetMapping
-    public List<Position> getPositions(){
+    public List<Position> getPositions() {
         return positionService.getPositions();
 
     }
 
 
-
     @GetMapping("/{id}")
-    public Position getPositions(@PathVariable Long id){
+    public Position getPositions(@PathVariable Long id) {
         return positionService.getPositionById(id);
     }
+
+    @GetMapping("/getjobs")
+    public List<PositionListItem> getComplexPositions(@RequestHeader("apiKey") String apiKey, @RequestBody Position position){
+        if(!clientService.isApiKeyExists(apiKey)){
+            throw new IllegalArgumentException("api key not found");
+        }
+
+        return positionService.getPositionsByTitleOrLocation(position).stream().map(PositionListItem::new).collect(Collectors.toList());
+    }
+
 }

@@ -22,9 +22,13 @@ public class Position {
     @Size(max = 50)
     private String location;
 
+    @Column
+    private String jobUrl;
+
     public Position(PositionSaveCommand positionSaveCommand) {
         this.title = (positionSaveCommand.getTitle() != null) ? positionSaveCommand.getTitle() : "";
         this.location = (positionSaveCommand.getLocation() != null) ? positionSaveCommand.getLocation() : "";
+        this.jobUrl = "";
     }
 
     public Position() {
@@ -45,5 +49,13 @@ public class Position {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getJobUrl() {
+        return jobUrl;
+    }
+
+    public void setJobUrl(String jobUrl) {
+        this.jobUrl = jobUrl;
     }
 }

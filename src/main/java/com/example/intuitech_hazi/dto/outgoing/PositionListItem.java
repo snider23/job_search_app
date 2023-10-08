@@ -1,20 +1,27 @@
 package com.example.intuitech_hazi.dto.outgoing;
 
+import com.example.intuitech_hazi.domain.Position;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 public class PositionListItem {
-    private Long id;
-    private String title;
-    private String location;
-    private String url;
+//    private Long id;
+    private String jobTitle;
+    private String locationName;
+    private String jobUrl;
 
-    public PositionListItem(Long id, String title, String location, String url) {
-        this.id = id;
-        this.title = title;
-        this.location = location;
-        this.url = url;
+    public PositionListItem(String title, String location, String url) {
+//        this.id = id;
+        this.jobTitle = title;
+        this.locationName = location;
+        this.jobUrl = url;
+    }
+
+    public PositionListItem(Position position) {
+        this.jobTitle= position.getTitle();
+        this.locationName= position.getLocation();
+        this.jobUrl= position.getJobUrl();
     }
 }

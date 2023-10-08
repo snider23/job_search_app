@@ -6,6 +6,7 @@ import com.example.intuitech_hazi.repository.PositionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,6 +14,7 @@ import java.util.List;
 public class PositionService {
 
     private PositionRepository positionRepository;
+    private final String URL = "http://localhost:8080/positions/";
 
     public PositionService(PositionRepository positionRepository) {
         this.positionRepository = positionRepository;
@@ -25,6 +27,9 @@ public class PositionService {
             throw new IllegalArgumentException("The location of position is too long");
         }
         Position createdPosition = positionRepository.save(newPosition);
+        Long positionId = createdPosition.getId();
+        String positionURL= String.format("%s%d",URL,positionId);
+        createdPosition.setJobUrl(positionURL);
         return createdPosition.toString();
     }
 
@@ -33,6 +38,15 @@ public class PositionService {
     }
 
     public Position getPositionById(Long id){return positionRepository.findPositionById(id);}
+
+    public List<Position> getPositionsByTitleOrLocation(Position position){
+        String jobTitle = "%" + position.getTitle() + "%";
+        String jobLocation = "%" + position.getLocation() + "%";
+        List<Position> positionList = positionRepository.findPositionsBy(jobTitle, jobLocation);
+        List<Position> result= new ArrayList<>();
+        result.addAll(positionList);
+        return result;
+    }
 
 
 }

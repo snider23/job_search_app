@@ -14,17 +14,18 @@ public class ReedJob {
 
     private final WebClient webClient=WebClient.create("https://www.reed.co.uk");
 
-
-    Mono<String> response=webClient.get()
-            .uri(uriBuilder -> uriBuilder
-                    .path("/api/1.0/search")
-                    .queryParam("keywords","developer")
-                    .queryParam("locationName","London")
-                    .build())
-            .header(HttpHeaders.AUTHORIZATION,"877fa464-345d-42ea-87bf-4975f7896c03")
-            .retrieve()
-            .bodyToMono(String.class);
-
+//
+//    Mono<String> response=webClient.get()
+//            .uri(uriBuilder -> uriBuilder
+//                    .path("/api/1.0/search")
+//                    .queryParam("keywords",keyword.getTitle())
+//                    .queryParam("locationName",keyword.getLocation())
+//                    .queryParam("resultsToTake","20")
+//                    .build())
+//            .headers(headers -> headers.setBasicAuth(externalApiKey, ""))
+//            .retrieve()
+//            .bodyToMono(String.class);
+//
 
 
 
