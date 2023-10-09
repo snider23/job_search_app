@@ -16,6 +16,9 @@ public class ClientSaveCommand {
     public ClientSaveCommand() {
     }
 
+    public ClientSaveCommand(String name, String email) {
+    } //testhez
+
     public String getName() {
         return name;
     }
