@@ -46,6 +46,11 @@ public class PositionService {
     public Position getPositionById(Long id){return positionRepository.findPositionById(id);}
 
     public List<Position> getPositionsByTitleOrLocation(Position position){
+        if (position.getTitle().length()>50){
+            throw new IllegalArgumentException("The title of position is too long");
+        } else if (position.getLocation().length() >50) {
+            throw new IllegalArgumentException("The location of position is too long");
+        }
         String jobTitle = "%" + position.getTitle() + "%";
         String jobLocation = "%" + position.getLocation() + "%";
         List<Position> positionList = positionRepository.findPositionsBy(jobTitle, jobLocation);

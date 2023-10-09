@@ -21,19 +21,18 @@ public class Client {
     private String name;
 
     @Column(nullable = false, unique = true)
-//    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
-//            flags = Pattern.Flag.CASE_INSENSITIVE)
-//    @NotEmpty(message = "Email cannot be empty")
     private String email;
 
     @Column(nullable = false)
-//    @UuidGenerator(style = UuidGenerator.Style.RANDOM)
     private String apiKey;
 
     public Client() {
     }
 
     public Client(ClientSaveCommand clientSaveCommand) {
+        if (clientSaveCommand.getName().length()>100){
+            throw new IllegalArgumentException("The name is too long");
+        }
         this.name = clientSaveCommand.getName();
         this.email = clientSaveCommand.getEmail();
 
