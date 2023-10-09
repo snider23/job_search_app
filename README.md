@@ -1,7 +1,8 @@
-Intuitech Felveteli Hazi Feladat
+Intuitech Junior Fullstack Hazi Feladat
 
-The task was developed in the IntelliJ IDEA development environment and can be executed within this environment.
-For testing purposes, I created a local MYSQL database and used it. The configuration files run automatically,
+The application is a Spring Boot application, written and developed in the IntelliJ IDEA development environment and can be executed within this environment.
+SDK: Java Corretto 17, Spring Boot version 3.1.4
+For testing purposes, I created a local MYSQL database and used it. Integration tests are using JUnit and Mockito. The configuration files run automatically,
 so for testing the program, I utilized the development environment's built-in console and pre-prepared HTTP requests.
 
 Further Steps for Project Development:
