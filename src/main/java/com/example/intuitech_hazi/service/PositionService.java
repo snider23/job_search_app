@@ -1,22 +1,29 @@
 package com.example.intuitech_hazi.service;
 
 import com.example.intuitech_hazi.domain.Position;
+import com.example.intuitech_hazi.dto.outgoing.PositionListItem;
 import com.example.intuitech_hazi.repository.PositionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class PositionService {
 
     private PositionRepository positionRepository;
+    private ClientService clientService;
     private final String URL = "http://localhost:8080/positions/";
 
-    public PositionService(PositionRepository positionRepository) {
+    public PositionService(PositionRepository positionRepository, ClientService clientService) {
+
         this.positionRepository = positionRepository;
+        this.clientService=clientService;
     }
 
     public String createNewPosition(Position newPosition){
@@ -47,5 +54,13 @@ public class PositionService {
         return result;
     }
 
+    public List<PositionListItem> getComplexPositions(@RequestBody Position position, @RequestHeader("apiKey") String apiKey) {
+
+        if (!clientService.isApiKeyExists(apiKey)) {
+            throw new IllegalArgumentException("api key not found");
+        }
+
+        return getPositionsByTitleOrLocation(position).stream().map(PositionListItem::new).collect(Collectors.toList());
+    }
 
 }

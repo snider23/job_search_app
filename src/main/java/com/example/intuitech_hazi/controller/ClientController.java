@@ -25,7 +25,7 @@ public class ClientController {
     @PostMapping
     public ResponseEntity<String> registerNewClient(@RequestBody ClientSaveCommand newClient) {
         if (clientService.isEmailInUse(newClient.getEmail())) {
-          //  return ResponseEntity.badRequest().body("Email already in use");
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is already in use");
 
         }

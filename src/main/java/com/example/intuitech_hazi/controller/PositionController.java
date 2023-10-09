@@ -4,10 +4,10 @@ import com.example.intuitech_hazi.domain.Position;
 import com.example.intuitech_hazi.dto.outgoing.PositionListItem;
 import com.example.intuitech_hazi.service.ClientService;
 import com.example.intuitech_hazi.service.PositionService;
+import com.example.intuitech_hazi.service.ReedJob;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,7 +24,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/positions")
@@ -36,23 +35,70 @@ public class PositionController {
 
     private WebClient webClient;
 
+    private ReedJob reedJob;
+
     @Value("${reed.api.key}")
     private String externalApiKey;
 
-
-
-
-    @Autowired
-    public PositionController(@Value("${reed.url}") String websiteUrl,
-                              PositionService positionService,
-                              ClientService clientService,
-                              WebClient.Builder webClientBuilder) {
+    public PositionController(
+            @Value("${reed.url}") String websiteUrl,
+            PositionService positionService,
+            WebClient.Builder webClientBuilder,
+            ClientService clientService,
+            ReedJob reedJob) {
         this.positionService = positionService;
         this.clientService = clientService;
         this.webClient = webClientBuilder.baseUrl(websiteUrl)
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
                         .responseTimeout(Duration.ofMinutes(2))))
                 .build();
+        this.reedJob = reedJob;
+        this.externalApiKey = reedJob.getExternalApiKey();
+    }
+
+//    @Autowired
+//    public PositionController(@Value("${reed.url}") String websiteUrl,
+//                              PositionService positionService,
+//                              ClientService clientService,
+//                              WebClient.Builder webClientBuilder) {
+//        this.positionService = positionService;
+//        this.clientService = clientService;
+//        this.webClient = webClientBuilder.baseUrl(websiteUrl)
+//                .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
+//                        .responseTimeout(Duration.ofMinutes(2))))
+//                .build();
+//    }
+
+
+    @GetMapping("/search")
+    public Mono<Object> getAllJobs(@RequestBody Position position, @RequestHeader("apiKey") String apiKey) {
+        if (!clientService.isApiKeyExists(apiKey)) {
+            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid API key"));
+        }
+        List<PositionListItem> allPositionFromBothDB = new ArrayList<>();
+
+        return this.webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/1.0/search")
+                        .queryParam("keywords", position.getTitle())
+                        .queryParam("locationName", position.getLocation())
+                        .queryParam("resultsToTake", "5")
+                        .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(headers -> headers.setBasicAuth(externalApiKey, ""))
+                .retrieve()
+                .bodyToMono(String.class)
+                .flatMap(json -> {
+                    try {
+                        List<PositionListItem> jobs = reedJob.processJsonResponse(json);
+                        allPositionFromBothDB.addAll(jobs);
+                        allPositionFromBothDB.addAll(positionService.getComplexPositions(position, apiKey));
+                        return Mono.just(allPositionFromBothDB);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                        return Mono.just(Collections.emptyList());
+                    }
+                });
     }
 
 
@@ -89,7 +135,7 @@ public class PositionController {
                             jobs.add(job);
                         }
                         allPositionFromBothDB.addAll(jobs);
-                        allPositionFromBothDB.addAll(getComplexPositions(position, apiKey));
+                        allPositionFromBothDB.addAll(positionService.getComplexPositions(position, apiKey));
                         return Mono.just(allPositionFromBothDB);
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
@@ -105,7 +151,7 @@ public class PositionController {
                                                @RequestHeader("apiKey") String apiKey) {
         if (!clientService.isApiKeyExists(apiKey)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Hibás API kulcs");
+                    .body("Invalid API key");
         } else {
 
             positionService.createNewPosition(newPosition);
@@ -114,26 +160,14 @@ public class PositionController {
         }
     }
 
-    //TODO kuka
-    @GetMapping
-    public List<Position> getPositions() {
-        return positionService.getPositions();
 
-    }
-
-    //TODO kuka
-    @GetMapping("/{id}")
-    public Position getPositions(@PathVariable Long id) {
-        return positionService.getPositionById(id);
-    }
-
-    @GetMapping("/getjobs")
-    public List<PositionListItem> getComplexPositions(@RequestBody Position position, @RequestHeader("apiKey") String apiKey) {
-        if (!clientService.isApiKeyExists(apiKey)) {
-            throw new IllegalArgumentException("api key not found");
-        }
-
-        return positionService.getPositionsByTitleOrLocation(position).stream().map(PositionListItem::new).collect(Collectors.toList());
-    }
+//    @GetMapping("/getjobs")
+//    public List<PositionListItem> getComplexPositions(@RequestBody Position position, @RequestHeader("apiKey") String apiKey) {
+//        if (!clientService.isApiKeyExists(apiKey)) {
+//            throw new IllegalArgumentException("api key not found");
+//        }
+//
+//        return positionService.getPositionsByTitleOrLocation(position).stream().map(PositionListItem::new).collect(Collectors.toList());
+//    }
 
 }
