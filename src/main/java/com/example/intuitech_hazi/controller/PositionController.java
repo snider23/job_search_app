@@ -44,9 +44,7 @@ public class PositionController {
     @Value("${reed.url}")
     private String websiteUrl;
 
-//    public PositionController(WebClient.Builder webClientBuilder) {
-//        this.webClient = webClientBuilder.baseUrl("https://www.reed.co.uk").build();
-//    }
+
 
     @Autowired
     public PositionController(PositionService positionService, ClientService clientService, WebClient.Builder webClientBuilder) {
@@ -102,10 +100,8 @@ public class PositionController {
                 });
     }
 
-    //TODO Jackson convertalas utan nezni
 
-
-    @PostMapping    //TODO nem hozza letre postmannel megnezni, headerken add at az apikeyt
+    @PostMapping
     public ResponseEntity<String> createNewJob(@RequestBody Position newPosition,
                                                @RequestHeader("apiKey") String apiKey) {
         if (!clientService.isApiKeyExists(apiKey)) {
@@ -114,11 +110,7 @@ public class PositionController {
         } else {
 
             positionService.createNewPosition(newPosition);
-//            newPosition.setTitle(newPosition.getTitle());
-//            newPosition.setLocation(newPosition.getLocation());
-//            Long positionId = newPosition.getId();
-//            String positionUrl = URL + positionId;
-//            positionService.getPositionById(positionId).setJobUrl(positionUrl);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(newPosition.getJobUrl());
         }
     }

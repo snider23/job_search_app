@@ -18,7 +18,6 @@ public class ClientController {
 
     private final ClientService clientService;
 
-//    public static final UUID MY_CONSTANT = UUID.randomUUID();
 
     @Autowired
     public ClientController(ClientService clientService) {
