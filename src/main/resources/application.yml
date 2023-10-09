@@ -1,7 +1,7 @@
-#webconfig:
-#  baseUrl: http://localhost:8080
-#  externalApiKey: 	898503cde7f033277be0c60d4fea605a153db02bac8116c7ceafc34ef9838ac8
-#  externalApiUrl: https://www.reed.co.uk/api/1.0/search
+reed:
+  url: https://www.reed.co.uk
+  api:
+    key: 877fa464-345d-42ea-87bf-4975f7896c03
 
 server:
   port: 8080
