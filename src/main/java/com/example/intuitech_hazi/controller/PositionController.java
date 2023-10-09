@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 @Validated
 public class PositionController {
 
-    private final String URL = "http://localhost:8080/positions/";
-
     private PositionService positionService;
     private ClientService clientService;
 
@@ -41,16 +39,17 @@ public class PositionController {
     @Value("${reed.api.key}")
     private String externalApiKey;
 
-    @Value("${reed.url}")
-    private String websiteUrl;
 
 
 
     @Autowired
-    public PositionController(PositionService positionService, ClientService clientService, WebClient.Builder webClientBuilder) {
+    public PositionController(@Value("${reed.url}") String websiteUrl,
+                              PositionService positionService,
+                              ClientService clientService,
+                              WebClient.Builder webClientBuilder) {
         this.positionService = positionService;
         this.clientService = clientService;
-        this.webClient = webClientBuilder.baseUrl("https://www.reed.co.uk")
+        this.webClient = webClientBuilder.baseUrl(websiteUrl)
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
                         .responseTimeout(Duration.ofMinutes(2))))
                 .build();
@@ -59,7 +58,7 @@ public class PositionController {
 
     @GetMapping("/jobs")
     public Mono<Object> getJobs(@RequestBody Position position, @RequestHeader("apiKey") String apiKey) {
-        if (!clientService.isApiKeyExists(apiKey)){
+        if (!clientService.isApiKeyExists(apiKey)) {
             return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid API key"));
         }
         List<PositionListItem> allPositionFromBothDB = new ArrayList<>();
@@ -68,9 +67,9 @@ public class PositionController {
         return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/api/1.0/search")
-                        .queryParam("keywords",position.getTitle())
-                        .queryParam("locationName",position.getLocation())
-                        .queryParam("resultsToTake","5")
+                        .queryParam("keywords", position.getTitle())
+                        .queryParam("locationName", position.getLocation())
+                        .queryParam("resultsToTake", "5")
                         .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(headers -> headers.setBasicAuth(externalApiKey, ""))
@@ -115,13 +114,14 @@ public class PositionController {
         }
     }
 
+    //TODO kuka
     @GetMapping
     public List<Position> getPositions() {
         return positionService.getPositions();
 
     }
 
-
+    //TODO kuka
     @GetMapping("/{id}")
     public Position getPositions(@PathVariable Long id) {
         return positionService.getPositionById(id);

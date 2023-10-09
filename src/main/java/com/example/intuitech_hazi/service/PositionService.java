@@ -1,7 +1,6 @@
 package com.example.intuitech_hazi.service;
 
 import com.example.intuitech_hazi.domain.Position;
-import com.example.intuitech_hazi.dto.outgoing.PositionListItem;
 import com.example.intuitech_hazi.repository.PositionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

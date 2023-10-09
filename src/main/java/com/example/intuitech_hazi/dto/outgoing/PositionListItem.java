@@ -7,13 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PositionListItem {
-//    private Long id;
     private String jobTitle;
     private String locationName;
     private String jobUrl;
 
     public PositionListItem(String title, String location, String url) {
-//        this.id = id;
         this.jobTitle = title;
         this.locationName = location;
         this.jobUrl = url;

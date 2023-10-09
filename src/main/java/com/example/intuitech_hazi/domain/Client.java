@@ -2,14 +2,10 @@ package com.example.intuitech_hazi.domain;
 
 import com.example.intuitech_hazi.dto.incoming.ClientSaveCommand;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.annotations.UuidGenerator;
 
-import java.util.UUID;
+
 
 @Entity
 @Data

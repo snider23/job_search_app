@@ -13,7 +13,7 @@ import lombok.Data;
 public class Position {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     @Size(max = 50)

@@ -32,4 +32,4 @@ public class ClientSaveCommand {
         this.email = email;
     }
 }
-//TODO fundraise globalexeption handler athozni
+
