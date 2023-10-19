@@ -1,6 +1,6 @@
-package com.example.intuitech_hazi.domain;
+package com.example.jobsearch.domain;
 
-import com.example.intuitech_hazi.dto.incoming.PositionSaveCommand;
+import com.example.jobsearch.dto.incoming.PositionSaveCommand;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

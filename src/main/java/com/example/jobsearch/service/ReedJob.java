@@ -1,7 +1,7 @@
-package com.example.intuitech_hazi.service;
+package com.example.jobsearch.service;
 
-import com.example.intuitech_hazi.domain.Position;
-import com.example.intuitech_hazi.dto.outgoing.PositionListItem;
+import com.example.jobsearch.domain.Position;
+import com.example.jobsearch.dto.outgoing.PositionListItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

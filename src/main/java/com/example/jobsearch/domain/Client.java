@@ -1,6 +1,6 @@
-package com.example.intuitech_hazi.domain;
+package com.example.jobsearch.domain;
 
-import com.example.intuitech_hazi.dto.incoming.ClientSaveCommand;
+import com.example.jobsearch.dto.incoming.ClientSaveCommand;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

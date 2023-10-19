@@ -1,10 +1,10 @@
-package com.example.intuitech_hazi.controller;
+package com.example.jobsearch.controller;
 
-import com.example.intuitech_hazi.domain.Position;
-import com.example.intuitech_hazi.dto.outgoing.PositionListItem;
-import com.example.intuitech_hazi.service.ClientService;
-import com.example.intuitech_hazi.service.PositionService;
-import com.example.intuitech_hazi.service.ReedJob;
+import com.example.jobsearch.domain.Position;
+import com.example.jobsearch.dto.outgoing.PositionListItem;
+import com.example.jobsearch.service.ClientService;
+import com.example.jobsearch.service.PositionService;
+import com.example.jobsearch.service.ReedJob;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -41,7 +41,7 @@ public class PositionControllerTest {
     public void testGetAllJobs2_ValidApiKey() {
         when(clientService.isApiKeyExists(anyString())).thenReturn(true);
 
-        List<PositionListItem> jobListings = Arrays.asList(new PositionListItem(), new PositionListItem());
+        List<PositionListItem> jobListings = Arrays.asList(new PositionListItem());
         when(reedJob.getJobsFromExternalApi(any(Position.class), anyString())).thenReturn(Mono.just(jobListings));
 
         Mono<Object> result = positionController.getAllJobs2(new Position(), "valid-api-key");

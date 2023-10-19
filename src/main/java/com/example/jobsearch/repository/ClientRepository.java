@@ -1,6 +1,6 @@
-package com.example.intuitech_hazi.repository;
+package com.example.jobsearch.repository;
 
-import com.example.intuitech_hazi.domain.Client;
+import com.example.jobsearch.domain.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

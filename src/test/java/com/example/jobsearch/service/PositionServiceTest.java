@@ -1,7 +1,7 @@
-package com.example.intuitech_hazi.service;
+package com.example.jobsearch.service;
 
-import com.example.intuitech_hazi.domain.Position;
-import com.example.intuitech_hazi.repository.PositionRepository;
+import com.example.jobsearch.domain.Position;
+import com.example.jobsearch.repository.PositionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

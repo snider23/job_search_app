@@ -1,10 +1,10 @@
-package com.example.intuitech_hazi;
+package com.example.jobsearch;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class IntuitechHaziApplicationTests {
+class JobSearchAppTests {
 
 	@Test
 	void contextLoads() {

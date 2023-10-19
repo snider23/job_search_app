@@ -1,4 +1,4 @@
-package com.example.intuitech_hazi.dto.incoming;
+package com.example.jobsearch.dto.incoming;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,8 +1,8 @@
-package com.example.intuitech_hazi.service;
+package com.example.jobsearch.service;
 
-import com.example.intuitech_hazi.domain.Client;
-import com.example.intuitech_hazi.dto.incoming.ClientSaveCommand;
-import com.example.intuitech_hazi.repository.ClientRepository;
+import com.example.jobsearch.domain.Client;
+import com.example.jobsearch.dto.incoming.ClientSaveCommand;
+import com.example.jobsearch.repository.ClientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

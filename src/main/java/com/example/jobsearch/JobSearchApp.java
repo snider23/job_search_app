@@ -1,13 +1,13 @@
-package com.example.intuitech_hazi;
+package com.example.jobsearch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IntuitechHaziApplication {
+public class JobSearchApp {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IntuitechHaziApplication.class, args);
+		SpringApplication.run(JobSearchApp.class, args);
 	}
 
 }

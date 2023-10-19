@@ -1,8 +1,8 @@
-package com.example.intuitech_hazi.service;
+package com.example.jobsearch.service;
 
-import com.example.intuitech_hazi.domain.Position;
-import com.example.intuitech_hazi.dto.outgoing.PositionListItem;
-import com.example.intuitech_hazi.repository.PositionRepository;
+import com.example.jobsearch.domain.Position;
+import com.example.jobsearch.dto.outgoing.PositionListItem;
+import com.example.jobsearch.repository.PositionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;

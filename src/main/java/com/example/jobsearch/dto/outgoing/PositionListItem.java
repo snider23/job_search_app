@@ -1,6 +1,6 @@
-package com.example.intuitech_hazi.dto.outgoing;
+package com.example.jobsearch.dto.outgoing;
 
-import com.example.intuitech_hazi.domain.Position;
+import com.example.jobsearch.domain.Position;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

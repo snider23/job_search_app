@@ -1,8 +1,8 @@
-package com.example.intuitech_hazi.controller;
+package com.example.jobsearch.controller;
 
-import com.example.intuitech_hazi.domain.Client;
-import com.example.intuitech_hazi.dto.incoming.ClientSaveCommand;
-import com.example.intuitech_hazi.service.ClientService;
+import com.example.jobsearch.domain.Client;
+import com.example.jobsearch.dto.incoming.ClientSaveCommand;
+import com.example.jobsearch.service.ClientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
