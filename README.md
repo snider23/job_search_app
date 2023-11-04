@@ -1,4 +1,4 @@
-Intuitech Junior Fullstack Hazi Feladat
+Career Opportunity Finder
 
 The application is a Spring Boot application, written and developed in the IntelliJ IDEA development environment and can be executed within this environment.
 SDK: Java Corretto 17, Spring Boot version 3.1.4
